@@ -8,181 +8,222 @@
 #include "Shelves.h"
 #include "flags.h"
 
-bool SingleShelf::TryAdd(const std::string &order_id, std::unique_ptr<Food> food) {
+bool Shelves::SingleRowShelf::TryAdd(std::unique_ptr<Food> food) {
+    // Acquires lock for the shelf.
     Lock();
-    if (count_ == capacity_) {
+    if (content_.size() == capacity_) {
         Unlock();
+        // Shelf is full and hence the food cannot be added.
         return false;
     }
-    UnsafeAdd(std::move(food));
+    bool was_added = UnsafeAdd(std::move(food));
     Unlock();
-    return true;
+    return was_added;
 }
 
-bool SingleShelf::UnsafeAdd(std::unique_ptr<Food> food) {
+bool Shelves::SingleRowShelf::UnsafeAdd(std::unique_ptr<Food> food) {
     auto order_id = food->Id();
     if (content_.find(order_id) != content_.end()) {
+        // The food was already added to the shelf.
         return false;
     } else {
+        // The food is being added to the shelf.
         food->UpdateShelf(type_);
         content_.emplace(std::make_pair(order_id, std::move(food)));
-        count_++;
         return true;
     }
 }
 
-std::unique_ptr<Food> SingleShelf::GetFood(const Order &order) {
+std::unique_ptr<Food> Shelves::SingleRowShelf::GetFood(const Order &order) {
     Lock();
-    auto ret = UnsafeRemove(order.Id());
+    auto food = UnsafeRemove(order.Id());
     Unlock();
-    return std::move(ret);
+    return std::move(food);
 }
 
-std::unique_ptr<Food> SingleShelf::UnsafeRemove(const std::string &order_id) {
+std::unique_ptr<Food> Shelves::SingleRowShelf::UnsafeRemove(const std::string &order_id) {
     auto it = content_.find(order_id);
-    std::unique_ptr<Food> returned_food;
-    returned_food.swap(it->second);
-    content_.erase(it);
-    return std::move(returned_food);
-}
-
-
-std::vector<std::unique_ptr<std::pair<Order, double>>> OverflowShelf::GetRemovalChoices() {
-    // SHOUT: Modify this logic.
-    std::vector<std::unique_ptr<std::pair<Order, double>>> choices;
-    for (const auto &order_food : content_) {
-        auto now = std::chrono::system_clock::now();
-        std::chrono::system_clock::time_point min, max;
-        if (now > order_food.second->CookedTime() + std::chrono::seconds(flags::kMinPickupTime)) {
-            max = now;
-        } else {
-            max = order_food.second->CookedTime() + std::chrono::seconds(flags::kMinPickupTime);
-        }
-
-        if (flags::kMaxPickupTime < order_food.second->GetOrder().Shelflife()) {
-            min = order_food.second->CookedTime() + std::chrono::seconds(flags::kMaxPickupTime);
-        } else {
-            min = order_food.second->CookedTime() + std::chrono::seconds(order_food.second->GetOrder().Shelflife());
-        }
-
-        const auto &food_copy = *order_food.second;
-        double mean_value = (food_copy.ValueAtTime(min) - food_copy.ValueAtTime(max)) / 2;
-        auto temp = order_food.second->ValueAtTime(
-                std::chrono::system_clock::now() + std::chrono::seconds(1));
-        auto choice = std::make_unique<std::pair<Order, double>>(
-                std::make_pair(order_food.second->GetOrder(), mean_value));
-        choices.emplace_back(std::move(choice));
+    if (it == content_.end()) {
+        return nullptr;
     }
 
-    std::sort(choices.begin(), choices.end(), [](const auto &a, const auto &b) -> bool {
-        return a->second > b->second;
-    });
-    return choices;
+    std::unique_ptr<Food> removed_food;
+    removed_food.swap(it->second);
+    content_.erase(it);
+    return std::move(removed_food);
 }
 
-Shelves::Shelves(std::shared_ptr<Logger> logger) : hot_shelf_(std::make_unique<SingleShelf>("hot", 10)),
-                                                   cold_shelf_(std::make_unique<SingleShelf>("cold", 10)),
-                                                   frozen_shelf_(std::make_unique<SingleShelf>("frozen", 10)),
+
+std::vector<std::unique_ptr<std::pair<Order, double>>> Shelves::OverflowShelf::GetRemovalChoices() {
+    std::vector<std::unique_ptr<std::pair<Order, double>>> removal_choices;
+    // For each food item present in the shelf, probabilistically estimate the value of the food its time of delivery.
+    // We do not know the exact time at which the food would be picked up but we know what is the time frame when
+    // the courier would arrive.
+    for (const auto &order_food : content_) {
+        auto now = std::chrono::system_clock::now();
+        // Time bounds within which the food item would have to be picke up.
+        std::chrono::system_clock::time_point earliest_time_for_pickup, farthest_time_for_pickup;
+
+        double mean_value_at_delivery;
+        if (order_food.second->GetOrder().Shelflife() < flags::kMaxPickupTime) {
+            mean_value_at_delivery = 0;
+        } else {
+            if (now > order_food.second->CookedTime() + std::chrono::seconds(flags::kMinPickupTime)) {
+                // The food could be picked up any time now.
+                earliest_time_for_pickup = now;
+            } else {
+                // The food would not be picked up now but will be picked up after earliest_time_for_pickup.
+                earliest_time_for_pickup =
+                        order_food.second->CookedTime() + std::chrono::seconds(flags::kMinPickupTime);
+            }
+
+            const Food *removal_candidate = order_food.second.get();
+            farthest_time_for_pickup = order_food.second->CookedTime() + std::chrono::seconds(flags::kMaxPickupTime);
+            // The food would be picked up before the food expires.
+            if (flags::kMaxPickupTime <= order_food.second->GetOrder().Shelflife()) {
+                mean_value_at_delivery = (removal_candidate->ValueAtTime(earliest_time_for_pickup) -
+                                          removal_candidate->ValueAtTime(farthest_time_for_pickup)) / 2;
+            } else {
+                // There is a possibility that the food could expire before it is picked up.
+                std::chrono::system_clock::time_point expiry_time = order_food.second->CookedTime() +
+                                                                    std::chrono::seconds(
+                                                                            order_food.second->GetOrder().Shelflife());
+                farthest_time_for_pickup =
+                        order_food.second->CookedTime() + std::chrono::seconds(flags::kMaxPickupTime);
+                std::chrono::duration<double> duration_earliest_pickup_to_expiry =
+                        expiry_time - earliest_time_for_pickup;
+                std::chrono::duration<double> duration_earliest_pickup_to_fartheset_pickup =
+                        farthest_time_for_pickup - earliest_time_for_pickup;
+                // Weighted average of value of the food before expiry and after expirty. Note the value of the food
+                // becomes zero after expiry.
+                mean_value_at_delivery = ((removal_candidate->ValueAtTime(earliest_time_for_pickup) -
+                                           removal_candidate->ValueAtTime(farthest_time_for_pickup)) *
+                                          duration_earliest_pickup_to_expiry / 2) /
+                                         (duration_earliest_pickup_to_fartheset_pickup);
+            }
+        }
+
+        auto removal_choice = std::make_unique<std::pair<Order, double>>(
+                std::make_pair(order_food.second->GetOrder(), mean_value_at_delivery));
+        removal_choices.emplace_back(std::move(removal_choice));
+    }
+
+    std::sort(removal_choices.begin(), removal_choices.end(), [](const auto &a, const auto &b) -> bool {
+        return a->second > b->second;
+    });
+    return removal_choices;
+}
+
+Shelves::Shelves(std::shared_ptr<Logger> logger) : hot_shelf_(std::make_unique<SingleRowShelf>("hot", 10)),
+                                                   cold_shelf_(std::make_unique<SingleRowShelf>("cold", 10)),
+                                                   frozen_shelf_(std::make_unique<SingleRowShelf>("frozen", 10)),
                                                    overflow_shelf_(std::make_unique<OverflowShelf>("overflow", 15)),
                                                    logger_(logger) {}
 
 void Shelves::AddFood(std::unique_ptr<Food> food) {
+    const auto &order = food->GetOrder();
+    const auto &food_to_add = *food;
     if (food == nullptr) return;
 
-    bool is_added;
-    // TODO: Remove food copy
-    auto food_cpy = *food;
-
+    bool was_added_to_correct_temperature_shelf = true;
     if (food->Temp() == "hot") {
         auto food_id = food->Id();
-        is_added = hot_shelf_->TryAdd(food_id, std::move(food));
+        was_added_to_correct_temperature_shelf = hot_shelf_->TryAdd(std::make_unique<Food>(food_to_add));
     } else if (food->Temp() == "cold") {
         auto food_id = food->Id();
-        is_added = cold_shelf_->TryAdd(food_id, std::move(food));
+        was_added_to_correct_temperature_shelf = cold_shelf_->TryAdd(std::make_unique<Food>(food_to_add));
     } else if (food->Temp() == "frozen") {
         auto food_id = food->Id();
-        is_added = frozen_shelf_->TryAdd(food_id, std::move(food));
+        was_added_to_correct_temperature_shelf = frozen_shelf_->TryAdd(std::make_unique<Food>(food_to_add));
     }
 
-    if (!is_added) {
-        auto overflowed_food = std::make_unique<Food>(food_cpy);
-        if (!overflow_shelf_->TryAdd(food_cpy.Id(), std::move(overflowed_food))) {
-            overflow_shelf_->Lock();
-            double best_value = 0;
-            std::string best_order = "";
-            auto choices = overflow_shelf_->GetRemovalChoices();
+    if (!was_added_to_correct_temperature_shelf) {
+        // The food could not be added to the shelf corresponding to it's temperature. Hence trying to add to overflow
+        // shelf.
+        if (!overflow_shelf_->TryAdd(std::make_unique<Food>(food_to_add))) {
+            // The overflow shelf is full as well and hence we need to shift or discard one of the food items from
+            // the overflow shelf and add the food_to_add to it.
 
-            bool was_replaced = false;
-            for (const auto &choice: choices) {
-                if (choice->first.Temp() == "hot") {
+            // Lock the already full overflow shelf so that no new attempts to add to the shelf are fulfilled till we
+            // // add the current food.
+            overflow_shelf_->Lock();
+            auto removal_choices = overflow_shelf_->GetRemovalChoices();
+
+            bool should_discard_from_overflow = true;
+            for (const auto &removal_choice: removal_choices) {
+                if (removal_choice->first.Temp() == "hot") {
                     hot_shelf_->Lock();
                     if (!hot_shelf_->UnsafeIsFull()) {
-                        auto removed_food = overflow_shelf_->UnsafeRemove(choice->first.Id());
+                        //
+                        auto removed_food = overflow_shelf_->UnsafeRemove(removal_choice->first.Id());
                         order_shelf_map_.insert(std::make_pair(removed_food->Id(), "hot"));
                         hot_shelf_->UnsafeAdd(std::move(removed_food));
                         hot_shelf_->Unlock();
 
-                        overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_cpy));
-                        order_shelf_map_.insert(std::make_pair(food_cpy.Id(), "overflow"));
-                        was_replaced = true;
-                        break;
+                        if (overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_to_add))) {
+                            order_shelf_map_.insert(std::make_pair(order.Id(), "overflow"));
+                            should_discard_from_overflow = false;
+                            break;
+                        }
                     }
                     hot_shelf_->Unlock();
-                } else if (choice->first.Temp() == "cold") {
+                } else if (removal_choice->first.Temp() == "cold") {
                     cold_shelf_->Lock();
                     if (!cold_shelf_->UnsafeIsFull()) {
-                        auto removed_food = overflow_shelf_->UnsafeRemove(choice->first.Id());
+                        auto removed_food = overflow_shelf_->UnsafeRemove(removal_choice->first.Id());
                         order_shelf_map_.insert(std::make_pair(removed_food->Id(), "cold"));
                         cold_shelf_->UnsafeAdd(std::move(removed_food));
                         cold_shelf_->Unlock();
 
-                        overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_cpy));
-                        order_shelf_map_.insert(std::make_pair(food_cpy.Id(), "overflow"));
-                        was_replaced = true;
-                        break;
+                        if (overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_to_add))) {
+                            order_shelf_map_.insert(std::make_pair(order.Id(), "overflow"));
+                            should_discard_from_overflow = false;
+                            break;
+                        }
                     }
                     cold_shelf_->Unlock();
-                } else if (choice->first.Temp() == "frozen") {
+                } else if (removal_choice->first.Temp() == "frozen") {
                     frozen_shelf_->Lock();
                     if (!frozen_shelf_->UnsafeIsFull()) {
-                        auto removed_food = overflow_shelf_->UnsafeRemove(choice->first.Id());
+                        auto removed_food = overflow_shelf_->UnsafeRemove(removal_choice->first.Id());
                         order_shelf_map_.insert(std::make_pair(removed_food->Id(), "frozen"));
                         frozen_shelf_->UnsafeAdd(std::move(removed_food));
                         frozen_shelf_->Unlock();
 
-                        overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_cpy));
-                        order_shelf_map_.insert(std::make_pair(food_cpy.Id(), "overflow"));
-                        was_replaced = true;
-                        break;
+                        if (overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_to_add))) {
+                            order_shelf_map_.insert(std::make_pair(order.Id(), "overflow"));
+                            should_discard_from_overflow = false;
+                            break;
+                        }
                     }
                     frozen_shelf_->Unlock();
                 }
             }
 
-            if (!was_replaced) {
-                auto removed_food = overflow_shelf_->UnsafeRemove(choices[0]->first.Id());
-                auto it = order_shelf_map_.find(choices[0]->first.Id());
+            if (should_discard_from_overflow) {
+                auto removed_food = overflow_shelf_->UnsafeRemove(removal_choices[0]->first.Id());
+                auto it = order_shelf_map_.find(removal_choices[0]->first.Id());
                 it->second = "discard";
 
-                overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_cpy));
-                order_shelf_map_.insert(std::make_pair(food_cpy.Id(), "overflow"));
+                overflow_shelf_->UnsafeAdd(std::make_unique<Food>(food_to_add));
+                order_shelf_map_.insert(std::make_pair(order.Id(), "overflow"));
             }
 
 
             overflow_shelf_->Unlock();
 
         } else {
-            order_shelf_map_.insert(std::make_pair(food_cpy.Id(), "overflow"));
+            // Update the map with which shelf the food was added to.
+            order_shelf_map_.insert(std::make_pair(order.Id(), "overflow"));
         }
 
     } else {
-        order_shelf_map_.insert(std::make_pair(food_cpy.Id(), food_cpy.Temp()));
+        // Update the map with which shelf the food was added to.
+        order_shelf_map_.insert(std::make_pair(order.Id(), order.Temp()));
     }
 }
 
 std::unique_ptr<Food> Shelves::GetFood(const Order &order) {
-    std::this_thread::sleep_for(std::chrono::seconds(4));
-
     auto ret_iter = order_shelf_map_.find(order.Id());
     if (ret_iter == order_shelf_map_.end()) {
         logger_->Log("Did not get food for Id: " + order.Id());
@@ -194,37 +235,27 @@ std::unique_ptr<Food> Shelves::GetFood(const Order &order) {
         auto time2 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         logger_->Log("Food with Id: " + order.Id() + " was picked up at " + std::ctime(&time2) + " with value " +
                      std::to_string(food->ValueNow()));
-        // Remove this.
-        food->PickedUp();
         return std::move(food);
     } else if (ret_iter->second == "cold") {
         auto food = cold_shelf_->GetFood(order);
         auto time2 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         logger_->Log("Food with Id: " + order.Id() + " was picked up at " + std::ctime(&time2) + " with value " +
                      std::to_string(food->ValueNow()));
-        food->PickedUp();
         return std::move(food);
     } else if (ret_iter->second == "frozen") {
         auto food = frozen_shelf_->GetFood(order);
         auto time2 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         logger_->Log("Food with Id: " + order.Id() + " was picked up at " + std::ctime(&time2) + " with value " +
                      std::to_string(food->ValueNow()));
-        food->PickedUp();
         return std::move(food);
     } else if (ret_iter->second == "overflow") {
         auto food = overflow_shelf_->GetFood(order);
         auto time2 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         logger_->Log("Food with Id: " + order.Id() + " was picked up at " + std::ctime(&time2) + " with value " +
                      std::to_string(food->ValueNow()));
-        food->PickedUp();
         return std::move(food);
     } else if (ret_iter->second == "discard") {
         logger_->Log("Food with Id: " + order.Id() + " was discarded.");
         return nullptr;
     }
-}
-
-std::string FindFoodToRemove() {
-
-    return "";
 }

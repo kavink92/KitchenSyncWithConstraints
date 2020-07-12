@@ -136,9 +136,6 @@
 		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Shelves.h">
 			<Option target="KitchenSync"/>
 		</Unit>
-		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.cc">
-			<Option target="KitchenSync"/>
-		</Unit>
 		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.h">
 			<Option target="KitchenSync"/>
 		</Unit>

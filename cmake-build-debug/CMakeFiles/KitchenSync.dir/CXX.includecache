@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierExecutor.cpp
+iostream
+-
+CourierExecutor.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierExecutor.h
+
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierExecutor.h
 chrono
 -
@@ -22,6 +28,12 @@ CourierOrderQueue.h
 Logger.h
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.h
 
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.cpp
+iostream
+-
+CourierOrderQueue.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.h
+
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.h
 vector
 -
@@ -32,6 +44,10 @@ condition_variable
 Order.h
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.h
 
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Food.cpp
+Food.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Food.h
+
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Food.h
 chrono
 -
@@ -41,6 +57,12 @@ iostream
 -
 Order.h
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.h
+
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.cpp
+iostream
+-
+Kitchen.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.h
 
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.h
 vector
@@ -60,6 +82,12 @@ KitchenOrderQueue.h
 Logger.h
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.h
 
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/KitchenOrderQueue.cpp
+iostream
+-
+KitchenOrderQueue.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/KitchenOrderQueue.h
+
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/KitchenOrderQueue.h
 vector
 -
@@ -81,6 +109,12 @@ condition_variable
 -
 vector
 -
+
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.cpp
+iostream
+-
+Order.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.h
 
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.h
 string
@@ -133,6 +167,28 @@ Logger.h
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.h
 
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.h
+
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/main.cpp
+iostream
+-
+thread
+-
+vector
+-
+mutex
+-
+future
+-
+chrono
+-
+OrderGenerator.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/OrderGenerator.h
+Kitchen.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.h
+CourierOrderQueue.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.h
+Logger.h
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.h
 
 /usr/local/google/home/kavin/CLionProjects/KitchenSync/nlohmann/json.hpp
 algorithm

@@ -8,7 +8,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/KitchenSync.dir/Order.cpp.o"
   "CMakeFiles/KitchenSync.dir/OrderGenerator.cpp.o"
   "CMakeFiles/KitchenSync.dir/Shelves.cpp.o"
-  "CMakeFiles/KitchenSync.dir/flags.cc.o"
   "CMakeFiles/KitchenSync.dir/main.cpp.o"
   "KitchenSync"
   "KitchenSync.pdb"

@@ -6,6 +6,7 @@
 #include "Logger.h"
 
 void Logger::Log(const std::string &message) {
-    //std::unique_lock<std::mutex> lck(mtx_);
-    //std::cout << message << std::endl;
+    // Ensures the cout threads are synchronized. This would not allow the output messages to be intermingled.
+    std::unique_lock<std::mutex> lck(mtx_);
+    std::cout << message << std::endl;
 }

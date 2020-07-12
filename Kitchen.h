@@ -17,14 +17,19 @@
 
 class Kitchen {
 public:
-    Kitchen(std::shared_ptr<Shelves> shelves, std::shared_ptr<KitchenOrderQueue> kod, std::shared_ptr<Logger> logger);
+    Kitchen(std::shared_ptr<Shelves> shelves, std::shared_ptr<KitchenOrderQueue> kitchen_order_queue,
+            std::shared_ptr<Logger> logger);
 
+    // Runs the kitchen and contains the core logic. It receives next available order from kitchen_order_queue_ and adds
+    // cooked food to the shelf. Thread safe.
     void Run();
 
 private:
-    std::unordered_map<std::string, std::pair<Order, bool>> order_and_status_;
+    // The following member variables are not owned by Kitchen.
+    // Shelves to which the food would be added.
     std::shared_ptr<Shelves> shelves_;
-    std::shared_ptr<KitchenOrderQueue> kod_;
+    // The order queue from which the next available order is obtained.
+    std::shared_ptr<KitchenOrderQueue> kitchen_order_queue_;
     std::shared_ptr<Logger> logger_;
 };
 

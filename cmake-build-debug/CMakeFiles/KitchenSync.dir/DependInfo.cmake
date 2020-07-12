@@ -13,7 +13,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.cpp" "/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir/Order.cpp.o"
   "/usr/local/google/home/kavin/CLionProjects/KitchenSync/OrderGenerator.cpp" "/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir/OrderGenerator.cpp.o"
   "/usr/local/google/home/kavin/CLionProjects/KitchenSync/Shelves.cpp" "/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir/Shelves.cpp.o"
-  "/usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.cc" "/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir/flags.cc.o"
   "/usr/local/google/home/kavin/CLionProjects/KitchenSync/main.cpp" "/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

@@ -13,15 +13,15 @@
 
 class OrderGenerator {
 public:
-    OrderGenerator(std::shared_ptr<Shelves> shelves, std::shared_ptr<KitchenOrderQueue> kod,
-                   std::shared_ptr<CourierOrderQueue> cod, std::shared_ptr<Logger> logger);
+    OrderGenerator(std::shared_ptr<KitchenOrderQueue> kitchen_order_queue,
+                   std::shared_ptr<CourierOrderQueue> courier_order_queue, std::shared_ptr<Logger> logger);
+
     // Generates the orders.
     void Generate();
 
 private:
-    std::shared_ptr<Shelves> shelves_;
-    std::shared_ptr<KitchenOrderQueue> kod_;
-    std::shared_ptr<CourierOrderQueue> cod_;
+    std::shared_ptr<KitchenOrderQueue> kitchen_order_queue_;
+    std::shared_ptr<CourierOrderQueue> courier_order_queue_;
     std::shared_ptr<Logger> logger_;
 };
 

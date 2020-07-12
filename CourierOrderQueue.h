@@ -13,22 +13,20 @@
 
 class CourierOrderQueue {
 public:
-    // constructor delete
-
     CourierOrderQueue() {}
 
+    // Adds new order to the queue.
     void AddOrder(std::unique_ptr<Order> order);
 
+    // Get the next available order from the queue.
     std::unique_ptr<Order> GetNextOrders();
-
-    void ShutDown();
 
 private:
     int pending_order_count_ = 0;
+    // Stores the pending orders in the queue.
     std::vector<std::unique_ptr<Order>> pending_orders_;
     std::mutex mtx_;
     std::condition_variable cv_;
-    bool is_shut_down_ = false;
 };
 
 

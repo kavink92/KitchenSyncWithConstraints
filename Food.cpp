@@ -16,17 +16,13 @@ std::string Food::Temp() const {
     return order_.Temp();
 }
 
-std::chrono::system_clock::time_point Food::CookedTime() {
-    return cooked_time_;
-}
-
 void Food::UpdateShelf(const std::string &type) {
     shelf_history_.push_back(std::make_pair(type, std::chrono::system_clock::now()));
 
     auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     auto print_str =
             "Food with Id: " + order_.Id() + " placed in shelf: " + type + " at time " + std::ctime(&time) + "\n";
-    //std::cout << print_str;
+    std::cout << print_str;
 }
 
 double Food::ValueNow() const {
@@ -35,10 +31,12 @@ double Food::ValueNow() const {
 
 double Food::ValueAtTime(const std::chrono::system_clock::time_point &time) const {
     std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - cooked_time_;
+    // Food has expired.
     if (elapsed_seconds.count() > order_.Shelflife()) {
         return 0;
     }
 
+    // Food is in transition state and not moved to any shelf.
     if (shelf_history_.empty()) {
         return 1;
     }
@@ -46,6 +44,9 @@ double Food::ValueAtTime(const std::chrono::system_clock::time_point &time) cons
     auto calc_type = shelf_history_[0].first;
     auto calc_time = shelf_history_[0].second;
     double value = 1;
+
+    // At the end of each iteration of the loop, value would contain the value of the food before it was shifted from
+    // i-1th shelf to ith shelf.
     for (int i = 1; i < shelf_history_.size(); i++) {
         std::chrono::duration<double> duration = shelf_history_[i].second - calc_time;
         value -= Calc(order_.Shelflife(), order_.DecayRate(), duration.count(),
@@ -58,6 +59,7 @@ double Food::ValueAtTime(const std::chrono::system_clock::time_point &time) cons
         }
     }
 
+    // The food is still in the last shelf of the shelf history and calculate the value at given time.
     std::chrono::duration<double> duration = time - calc_time;
     value -= Calc(order_.Shelflife(), order_.DecayRate(), duration.count(),
                   ShelfDecayModifier(calc_type));
@@ -66,25 +68,6 @@ double Food::ValueAtTime(const std::chrono::system_clock::time_point &time) cons
     } else {
         return value;
     }
-}
-
-void Food::PickedUp() {
-    is_picked_up = true;
-    pickup_time_ = std::chrono::system_clock::now();
-    value_at_pickup_ = ValueNow();
-}
-
-bool Food::WasPickedUp() const {
-    return is_picked_up;
-}
-
-double Food::ValueAtPickup() const {
-    return value_at_pickup_;
-}
-
-void Food::Delivered() {
-    is_delivered = true;
-    delivery_time_ = std::chrono::system_clock::now();
 }
 
 double Food::Calc(const int shelf_life, const double decay_rate, const double order_age,

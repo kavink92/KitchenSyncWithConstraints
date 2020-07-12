@@ -5,29 +5,24 @@
 #include <iostream>
 #include "CourierOrderQueue.h"
 
-// CourierOrderQueue::CourierOrderQueue() {}
-
 void CourierOrderQueue::AddOrder(std::unique_ptr<Order> order) {
-    //std::unique_lock<std::mutex> lck(mtx_);
     std::string order_id = order->Id();
     pending_orders_.emplace_back(std::move(order));
     pending_order_count_++;
     if (pending_order_count_ == 1) {
+        // Notifies so that a thread which is waiting on GetNextOrders is now unblocked.
         cv_.notify_one();
     }
 }
 
 std::unique_ptr<Order> CourierOrderQueue::GetNextOrders() {
     std::unique_lock<std::mutex> lck(mtx_);
-    while (pending_order_count_ == 0 && !is_shut_down_) {
+    while (pending_order_count_ == 0) {
+        // Waits for at least one order to be present in pending_orders.
         cv_.wait(lck);
-
-        if (is_shut_down_ && pending_order_count_ == 0) {
-            return nullptr;
-        }
     }
 
-    if (is_shut_down_ && pending_order_count_ == 0) {
+    if (pending_order_count_ == 0) {
         return nullptr;
     }
 
@@ -37,9 +32,4 @@ std::unique_ptr<Order> CourierOrderQueue::GetNextOrders() {
     pending_order_count_--;
 
     return std::move(order);
-}
-
-void CourierOrderQueue::ShutDown() {
-    is_shut_down_ = true;
-    cv_.notify_all();
 }

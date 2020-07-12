@@ -366,33 +366,6 @@ Shelves.cpp.s:
 	$(MAKE) -f CMakeFiles/KitchenSync.dir/build.make CMakeFiles/KitchenSync.dir/Shelves.cpp.s
 .PHONY : Shelves.cpp.s
 
-flags.o: flags.cc.o
-
-.PHONY : flags.o
-
-# target to build an object file
-flags.cc.o:
-	$(MAKE) -f CMakeFiles/KitchenSync.dir/build.make CMakeFiles/KitchenSync.dir/flags.cc.o
-.PHONY : flags.cc.o
-
-flags.i: flags.cc.i
-
-.PHONY : flags.i
-
-# target to preprocess a source file
-flags.cc.i:
-	$(MAKE) -f CMakeFiles/KitchenSync.dir/build.make CMakeFiles/KitchenSync.dir/flags.cc.i
-.PHONY : flags.cc.i
-
-flags.s: flags.cc.s
-
-.PHONY : flags.s
-
-# target to generate assembly for a file
-flags.cc.s:
-	$(MAKE) -f CMakeFiles/KitchenSync.dir/build.make CMakeFiles/KitchenSync.dir/flags.cc.s
-.PHONY : flags.cc.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -456,9 +429,6 @@ help:
 	@echo "... Shelves.o"
 	@echo "... Shelves.i"
 	@echo "... Shelves.s"
-	@echo "... flags.o"
-	@echo "... flags.i"
-	@echo "... flags.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

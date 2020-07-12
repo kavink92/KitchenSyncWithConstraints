@@ -14,6 +14,7 @@ public:
           const double decay_rate) : id_(id), name_(name), temp_(temp), shelf_life_(shelf_life),
                                      decay_rate_(decay_rate) {}
 
+    // Getter functions for Order related data.
     std::string Id() const { return id_; }
 
     std::string Temp() const { return temp_; }
@@ -22,6 +23,7 @@ public:
 
     double DecayRate() const { return decay_rate_; }
 
+    // Prints the data encapsulated by this Order object.
     void Debug() const;
 
 private:

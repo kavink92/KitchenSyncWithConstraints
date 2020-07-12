@@ -55,8 +55,6 @@ CMakeFiles/KitchenSync.dir/Shelves.cpp.o: ../Shelves.cpp
 CMakeFiles/KitchenSync.dir/Shelves.cpp.o: ../Shelves.h
 CMakeFiles/KitchenSync.dir/Shelves.cpp.o: ../flags.h
 
-CMakeFiles/KitchenSync.dir/flags.cc.o: ../flags.cc
-
 CMakeFiles/KitchenSync.dir/main.cpp.o: ../CourierExecutor.h
 CMakeFiles/KitchenSync.dir/main.cpp.o: ../CourierOrderQueue.h
 CMakeFiles/KitchenSync.dir/main.cpp.o: ../Food.h

@@ -14,6 +14,7 @@
 
 class Logger {
 public:
+    // Logs the given message.
     void Log(const std::string &message);
 
 private:

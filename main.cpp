@@ -19,18 +19,18 @@ int main() {
     Kitchen kitchen(shelves, kitchen_order_queue, logger);
 
     // Order generator which generates the orders.
-    OrderGenerator order_generator(shelves, kitchen_order_queue, courier_order_queue, logger);
+    OrderGenerator order_generator(kitchen_order_queue, courier_order_queue, logger);
     std::thread order_generator_thread(&OrderGenerator::Generate, order_generator);
 
     // Imposing a constraint on the number of couriers and chefs in kitchen.
-    int num_threads= 100;
+    int num_threads = 100;
     std::thread kitchen_threads[num_threads];
     std::thread courier_threads[num_threads];
-    for (int i=0; i<num_threads; i++) {
+    for (int i = 0; i < num_threads; i++) {
         kitchen_threads[i] = std::thread(&Kitchen::Run, kitchen);
         courier_threads[i] = std::thread(&CourierExecutor::Run, courier_executor);
     }
-    for (int i=0; i<num_threads; i++) {
+    for (int i = 0; i < num_threads; i++) {
         kitchen_threads[i].join();
         courier_threads[i].join();
     }

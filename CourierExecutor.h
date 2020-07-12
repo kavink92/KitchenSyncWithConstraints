@@ -18,29 +18,20 @@ using namespace std::chrono;
 
 class CourierExecutor {
 public:
-    CourierExecutor(std::shared_ptr<Shelves> shelves, std::shared_ptr<CourierOrderQueue> cod,
+    CourierExecutor(std::shared_ptr<Shelves> shelves, std::shared_ptr<CourierOrderQueue> courier_order_queue,
                     std::shared_ptr<Logger> logger);
 
+    // Runs the core logic of Couriers. It receives next available order from courier_order_queue_ and dispatches a
+    // courier to pick the food with a randomized delay. Thread safe.
     void Run();
 
-    void UpdateTotalValue(double food_value) {
-        mtx_->lock();
-        *total_value_ += food_value;
-        mtx_->unlock();
-    }
-
-    double TotalValue() {
-        return *total_value_;
-    };
-
 private:
-    std::unordered_map<std::string, std::pair<Order, bool>> order_and_status_;
+    // The following member variables are not owned by CourierExecutor.
+    // Shelves from which the food will be picked.
     std::shared_ptr<Shelves> shelves_;
-    std::shared_ptr<CourierOrderQueue> cod_;
+    // The order queue from which the next available order is obtained.
+    std::shared_ptr<CourierOrderQueue> courier_order_queue_;
     std::shared_ptr<Logger> logger_;
-
-    std::shared_ptr<std::mutex> mtx_;
-    std::shared_ptr<double> total_value_ = 0;
 };
 
 

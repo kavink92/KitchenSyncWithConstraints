@@ -1,0 +1,4 @@
+/usr/local/google/home/kavin/clion-2020.1.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /usr/local/google/home/kavin/CLionProjects/KitchenSync
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug

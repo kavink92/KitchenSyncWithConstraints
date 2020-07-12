@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="KitchenSync"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="KitchenSync">
+				<Option output="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/KitchenSync" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 KitchenSync"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="KitchenSync/fast">
+				<Option output="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/KitchenSync" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 KitchenSync/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierExecutor.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierExecutor.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/CourierOrderQueue.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Food.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Food.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Kitchen.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/KitchenOrderQueue.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/KitchenOrderQueue.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Logger.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Order.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/OrderGenerator.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/OrderGenerator.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Shelves.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/Shelves.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.cc">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/flags.h">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/main.cpp">
+			<Option target="KitchenSync"/>
+		</Unit>
+		<Unit filename="/usr/local/google/home/kavin/CLionProjects/KitchenSync/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

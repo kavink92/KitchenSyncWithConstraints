@@ -1,0 +1,3 @@
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/edit_cache.dir
+/usr/local/google/home/kavin/CLionProjects/KitchenSync/cmake-build-debug/CMakeFiles/KitchenSync.dir
